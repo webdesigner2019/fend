@@ -13,34 +13,21 @@
  * 
 */
 
-/**
- * Define Global Variables
- * 
-*/
-//navigations global var
+
+//navi is assigned as global var
 const navi = document.getElementById('navbar__list');
-//sections global var
+//sections is assigned as another  global var
 const sections = document.querySelectorAll('section');
 
-/**
+/*
  * End Global Variables
- * Start Helper Functions
- * 
 */
-
-
-/**
- * End Helper Functions
- * Begin Main Functions
- * 
-*/
-
-// build the nav
+// build the menu
 
 const navCreate = () => {
 
     let nav = '';
-    //looping over all sections
+    //  loop on all four sections 
     sections.forEach(section => {
         const sectionID = section.id;
         const sectionDataNav = section.dataset.nav;
@@ -48,39 +35,44 @@ const navCreate = () => {
         nav += `<li><a class="menu__link" href="#${sectionID}">${sectionDataNav}</a></li>`;
     });
     
-    //append all elements to the navigation
+    //append all elements to the nav bar
     navi.innerHTML = nav;
 };
 navCreate();
 
 // Add class 'active' to section when near top of viewport
 
-function makeActive () {
-    for (const section of sectins) {
-        const box = section.getBoundingClientRect();
-        if (box.top <= 150 && box.bttom >= 150) {
-            document.addEventListener("scroll",function (){
-                makeActive();
-            })
-        } else {
+const offset = (section) => {
+    return Math.floor(section.getBoundingClientRect().top);
+};
 
-        } 
-    }
-}
-// Scroll to anchor ID using scrollTO event
+// set section as inactive
+const rmvActive = (section) => {
+    section.classList.remove('your-active-class');
+    section.style.cssText = "background-color: linear-gradient(0deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.2) 100%)";
+};
+// set section as active
+const addActive = (conditional, section) => {
+    if(conditional){
+        section.classList.add('your-active-class');
+        section.style.cssText = "background-color: gray;";
+    };
+};
 
+//implementating the actual function
 
+const sectionActivate = () => {
+    sections.forEach(section => {
+        const elementOffset = offset(section);
 
-/**
- * End Main Functions
- * Begin Events
- * 
-*/
+        inviewport = () => elementOffset < 150 && elementOffset >= -130;
 
-// Build menu 
+        rmvActive(section);
+        addActive(inviewport(),section);
+    });
+};
 
-// Scroll to section on link click
-
-// Set sections as active
+// adding event listener when scrolling
+window.addEventListener('scroll' ,sectionActivate);
 
 
