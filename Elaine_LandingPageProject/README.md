@@ -1,7 +1,7 @@
 # Landing Page Project
 
 ## Introduction
-This is my 2nd project called Landing Page readme in my 
+This is a Landing Page project readme for
 Front End Web Developer Nanodegree 
 
 ## The Languages that are present:

@@ -11,18 +11,16 @@
  * 
  * JS Standard: ESlint
  * 
-*/
+ */
 
 
-//navi is assigned as global var
+// navi is assigned as global var
 const navi = document.getElementById('navbar__list');
-//sections is assigned as another  global var
+// sections is assigned as another  global var
 const sections = document.querySelectorAll('section');
 
-/*
- * End Global Variables
-*/
-// build the menu
+
+// build the nav
 
 const navCreate = () => {
 
@@ -32,7 +30,11 @@ const navCreate = () => {
         const sectionID = section.id;
         const sectionDataNav = section.dataset.nav;
 
-        nav += `<li><a class="menu__link" href="#${sectionID}">${sectionDataNav}</a></li>`;
+        nav += `
+            <li id="${sectionID}Link">
+                <a class="menu__link" href="#${sectionID}">${sectionDataNav}</a>
+            </li>
+        `;
     });
     
     //append all elements to the nav bar
@@ -40,39 +42,52 @@ const navCreate = () => {
 };
 navCreate();
 
-// Add class 'active' to section when near top of viewport
-
-const offset = (section) => {
-    return Math.floor(section.getBoundingClientRect().top);
+// This function grabs the top and bottom border of the section so we know where the
+// section starts and ends
+const sectionBounds = (section) => {
+    const sectionBorders = section.getBoundingClientRect();
+    return {
+        top: Math.floor(sectionBorders.top),
+        bottom: Math.floor(sectionBorders.bottom)
+    }
 };
 
-// set section as inactive
-const rmvActive = (section) => {
-    section.classList.remove('your-active-class');
-    section.style.cssText = "background-color: linear-gradient(0deg, rgba(255,255,255,.1) 0%, rgba(255,255,255,.2) 100%)";
-};
-// set section as active
-const addActive = (conditional, section) => {
-    if(conditional){
-        section.classList.add('your-active-class');
-        section.style.cssText = "background-color: gray;";
-    };
+const activateSection = (sectionID) => {
+    const navbarLink = document.querySelector(`#navbar__list li#${sectionID}Link`);
+    navbarLink.classList.add('active-link');
 };
 
-//implementating the actual function
+const deactivateSection = (sectionID) => {
+    const navbarLink = document.querySelector(`#navbar__list li#${sectionID}Link`);
+    navbarLink.classList.remove('active-link');
+};
 
+// this function checks whether the user is within the section
+const isUserInSection = (sectionID, bounds) => {
+    if (bounds.top <= 0 && bounds.bottom > 0) {
+        // the user is inside the section
+        activateSection(sectionID);
+    } else {
+        // they are not
+        deactivateSection(sectionID);
+    }
+}
+
+// this function will handle adding and removing classes to navbar links
+// according to where the user is on the website
 const sectionActivate = () => {
     sections.forEach(section => {
-        const elementOffset = offset(section);
 
-        inviewport = () => elementOffset < 150 && elementOffset >= -130;
+        // {top: number, bottom: number}
+        const bounds = sectionBounds(section);
 
-        rmvActive(section);
-        addActive(inviewport(),section);
+        isUserInSection(section.id, bounds);
+
     });
 };
 
 // adding event listener when scrolling
-window.addEventListener('scroll' ,sectionActivate);
+
+window.addEventListener('scroll', sectionActivate);
 
 
