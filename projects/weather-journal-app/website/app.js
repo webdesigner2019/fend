@@ -1,10 +1,15 @@
+
 //Personal API Key for OpenWeatherMap API
 const appID = "3215329b63b0aa5f27b2de454549157c";
-const baseURL = "https://www.api.openweathermap.org";
+const baseURL = "http://api.openweathermap.org/data/2.5/weather?zip="
 
 //Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = (d.getMonth + 1) + "." + d.getDate() + d.getFullYear();
+// const currMonth = d.getMonth()+1;
+// const currDate = d.getDate();
+// const currYear = d.getFullYear();
+// let newDate = currMonth + "/" + currDate + "/" + currYear
+const newDate = d.getMonth()+1 + "/" + d.getDate() + "/" + d.getFullYear();
 
 // Event listener for when the Generate Entry button is clicked
 document.getElementById("generate").addEventListener("click", generateEntry);
@@ -52,8 +57,8 @@ const postData = async (url = "", data = {}) => {
 const updateUI = async (url = "") => {
     const response = await fetch(url);
     const allData = await response.json();
-
-    document.getElementById("date").innerHTML = "Date: " + allData.date;
+    
+    document.getElementById("date").innerHTML = "Date: " + newDate;
     document.getElementById("temp").innerHTML = "Temp: " + allData.temperature + "&deg;F";
     document.getElementById("content").innerHTML = "Feelings: " + allData.userResponse;
 };
